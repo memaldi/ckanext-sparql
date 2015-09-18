@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block content_primary_nav %}
+  {{ super() }}
+  {{ h.build_nav_icon('sparql_endpoint', _('SPARQL endpoint'), id=pkg.name) }}
+{% endblock %}
