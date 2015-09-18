@@ -1,5 +1,6 @@
 from ckan.controllers.package import PackageController
 from ckan.plugins import toolkit as tk
+from ckan.common import request
 import ckan.model as model
 import ckan.logic as logic
 import logging
@@ -18,8 +19,11 @@ class SPARQLController(PackageController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        c.pkg_dict = get_action('package_show')(context, {'id': id, 'include_tracking': True})
-        log.debug(c)
-        log.debug(c.pkg_dict)
+        c.pkg_dict = get_action('package_show')(
+            context, {'id': id, 'include_tracking': True}
+        )
+
+        log.debug(request.body)
+        log.debug(request.params)
 
         return render('sparql/sparql_endpoint.html')

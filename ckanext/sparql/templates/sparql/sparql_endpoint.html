@@ -1,3 +1,22 @@
 {% extends 'package/read_base.html' %}
 
 {% set pkg = c.pkg_dict %}
+
+{% block primary_content_inner %}
+  {{ super() }}
+  <h1>SPARQL endpoint for "{{pkg.title}}".</h1>
+  <form class="form-horizontal" method="post">
+    <div class="control-group">
+      <label class="control-label" for="sparql-query">Query</label>
+      <div class="controls">
+        <textarea class="span6" rows="10" cols="50" id="sparql-query" name="sparl-query"></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <button class="btn btn-primary" type="submit">{{ _('Send') }}</button>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}
