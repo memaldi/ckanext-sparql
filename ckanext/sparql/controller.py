@@ -23,6 +23,7 @@ RDF_FORMAT = ['rdf', 'application/rdf+xml', 'text/plain',
 c = tk.c
 render = tk.render
 get_action = logic.get_action
+check_access = logic.check_access
 
 
 class SPARQLController(PackageController):
@@ -31,15 +32,22 @@ class SPARQLController(PackageController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
-
-        c.pkg_dict = get_action('package_show')(
-            context, {'id': id, 'include_tracking': True}
-        )
+        try:
+            c.pkg_dict = get_action('package_show')(
+                context, {'id': id, 'include_tracking': True}
+            )
+        except logic.NotFound:
+            check_access('package_show', context, {'id': id})
+            resource = get_action('resource_show')(
+                context, {'id': id}
+            )
+            c.pkg_dict = get_action('package_show')(
+                context, {'id': resource['package_id'],
+                          'include_tracking': True}
+            )
 
         if request.method == 'POST':
-            log.debug(request.POST.keys())
             query = request.POST.getone('sparql-query')
-            log.debug(query)
             api_url = WELIVE_API + 'sparql-query-maker/query'
             package_id = None
             for resource in c.pkg_dict.get('resources', []):
@@ -53,7 +61,6 @@ class SPARQLController(PackageController):
                 response = r.json()
                 result = json.loads(response['response'])
                 c.result = result
-                log.debug(result)
         c.query = query
 
         return render('sparql/sparql_endpoint.html')
