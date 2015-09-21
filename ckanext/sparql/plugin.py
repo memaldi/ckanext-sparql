@@ -66,7 +66,6 @@ class SparqlPlugin(plugins.SingletonPlugin):
                 payload = {'graphName': resource['id']}
                 r = requests.post(api_url, files=files, data=payload)
                 log.debug(r.text)
-                # log.debug(r.json())
 
     def before_update(self, context, current, resource):
         pass

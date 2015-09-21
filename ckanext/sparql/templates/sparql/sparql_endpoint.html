@@ -9,7 +9,7 @@
     <div class="control-group">
       <label class="control-label" for="sparql-query">Query</label>
       <div class="controls">
-        <textarea class="span6" rows="10" cols="50" id="sparql-query" name="sparl-query"></textarea>
+        <textarea class="span6" rows="10" cols="50" id="sparql-query" name="sparql-query">{{c.query}}</textarea>
       </div>
     </div>
     <div class="control-group">
@@ -18,5 +18,24 @@
       </div>
     </div>
   </form>
-
+  {% if c.result %}
+    <table class="table">
+      <thead>
+        <tr>
+          {% for head in c.result['head']['vars'] %}
+          <th>{{head}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in c.result['results']['bindings'] %}
+          <tr>
+          {% for head in c.result['head']['vars'] %}
+            <td>{% if item[head]['type'] == 'uri' %}<a href="{{item[head]['value']}}">{% endif %}<small>{{item[head]['value']}}{% if 'xml:lang' in item[head] %}@{{item[head]['xml:lang']}}{% endif %}</small>{% if item[head]['type'] == 'uri' %}</a>{% endif %}</td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 {% endblock %}
