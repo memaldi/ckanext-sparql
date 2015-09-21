@@ -49,12 +49,13 @@ class SparqlPlugin(plugins.SingletonPlugin):
         for resource in pkg_dict.get('resources', []):
             if resource.get('format', '').lower() in RDF_FORMAT:
                 pkg_dict['sparql'] = True
+                break
         return pkg_dict
 
     # IResourceController
 
     def before_create(self, context, resource):
-        pass
+        return resource
 
     def after_create(self, context, resource):
         if resource.get('format', '').lower() in RDF_FORMAT:
@@ -66,18 +67,19 @@ class SparqlPlugin(plugins.SingletonPlugin):
                 payload = {'graphName': resource['id']}
                 r = requests.post(api_url, files=files, data=payload)
                 log.debug(r.text)
+        return resource
 
     def before_update(self, context, current, resource):
-        pass
+        return resource
 
     def after_update(self, context, resource):
-        pass
+        return resource
 
     def before_delete(self, context, resource, resources):
-        pass
+        return resource
 
     def after_delete(self, context, resource):
-        pass
+        return resource
 
     def before_show(self, resource_dict):
-        pass
+        return resource_dict
