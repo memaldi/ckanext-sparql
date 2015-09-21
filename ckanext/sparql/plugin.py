@@ -23,6 +23,7 @@ class SparqlPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IResourceController)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     # IConfigurer
 
@@ -41,6 +42,14 @@ class SparqlPlugin(plugins.SingletonPlugin):
                       action='sparql_endpoint', ckan_icon='cogs')
 
         return map
+
+    # IPackageController
+
+    def before_view(self, pkg_dict):
+        for resource in pkg_dict.get('resources', []):
+            if resource.get('format', '').lower() in RDF_FORMAT:
+                pkg_dict['sparql'] = True
+        return pkg_dict
 
     # IResourceController
 

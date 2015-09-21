@@ -2,5 +2,7 @@
 
 {% block content_primary_nav %}
   {{ super() }}
-  {{ h.build_nav_icon('sparql_endpoint', _('SPARQL endpoint'), id=pkg.name) }}
+  {% if pkg['sparql'] == True %}
+    {{ h.build_nav_icon('sparql_endpoint', _('SPARQL endpoint'), id=pkg.name) }}
+  {% endif %}
 {% endblock %}
